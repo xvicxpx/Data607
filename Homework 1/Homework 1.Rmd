@@ -1,19 +1,54 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Data 607 Homework 1"
+output:
+  html_document:
+    df_print: paged
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+# Introduction
+This dataset is from FiveThirtyEight which is a website that collects data to use for statistical analysis.
+The dataset that I choose from FiveThirtyEight is the [Polls dataset](https://github.com/fivethirtyeight/data/tree/master/polls) and specificially the approval poll ratings.
+This dataset is a collection of data from different polling organization which aggregates them into this one file. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
-plot(cars)
+x = read.csv(url("https://projects.fivethirtyeight.com/polls-page/president_approval_polls.csv"))
+
+head(x)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+str(x)
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+We can see that the data is not up to date as Donald Trump is the only president in this data file
+```{r}
+unique(x$politician)
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+unique(x$state)
+unique(x$tracking)
+unique(x$sponsor_candidate)
+```
 
+# Creation of Subset
+First I am going to trim down the dataset for only the columns that are needed. Some columns like pollster_rating_id, sponsor_candidate, and tracking are most likely not needed in the final subset as they do not help further the exploration of the data. Some columns like state does not have any information in them and will also be removed
+
+```{r}
+subset = x[c("politician", "pollster", "fte_grade", "sample_size", "population", "methodology", "start_date", "end_date", "created_at")]
+```
+
+Looking at the column called population there is a seperate table which tells you what each letter represents and I will be joining that into the subset in order to make it easier to understand what the codes mean
+```{r}
+unique(subset$population)
+
+population_key = data.frame(c("a", "rv", "v", "lv"), c("Adults", "Registered Voters", "Voters", "Likely Voters"))
+colnames(population_key) = c("population", "population_description")
+
+subset = merge(subset, population_key, by="population")
+
+head(subset)
+```
+# Conclusion
+With this dataset one can graph the approval rates over time in order to see the historical approval rating of the president. One can also put specific filters based on whether they only want a certain sample size, population type, or grade of the pollster. Based on the different filters applied is can change the results drastically and which can change the public perception. I would also like to see if the dataset would be able to include the parties affiliation as that also may have a affect as maybe some pollsters only interview certain groups of people.
