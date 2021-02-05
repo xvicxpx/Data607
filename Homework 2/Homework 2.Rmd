@@ -1,19 +1,97 @@
 ---
-title: "R Notebook"
+title: "Micheal Bay Movie Survey"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+# Survey
 
-```{r}
-plot(cars)
+In this survey I asked my participants to rate all of the movies that Micheal Bay directed. The participants responded on Microsoft Form which is a online survey tool [Survey](https://forms.office.com/Pages/ResponsePage.aspx?id=kQ73UQC2m0Sp8w6tO6U06qt7qBwjFdxHt2vDgA3NI1lUOUFHNkFZM0s4QTZOM09IUEVLNU41UkwxUC4u). The survey consists of putting entering their name and rating every Micheal Bay movie that he has created. When the participants finish entering I then will download the excel file 
+
+```{r Getting Survey Data}
+library(readxl)
+
+if (!file.exists('Micheal Bay Movie Rating.xlsx')) {
+  download.file('https://github.com/xvicxpx/Data607/blob/main/Homework%202/Micheal%20Bay%20Movie%20Rating.xlsx?raw=true', destfile = 'Micheal Bay Movie Rating.xlsx')
+}
+
+data_set = read_excel('Micheal Bay Movie Rating.xlsx')
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+# SQLite and Importing Data
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+I will be loading the data into a local database using SQLite which is a light weight version of SQL. The only downside is that SQlite does not have a lot of functions compared to MySQL, but because we will be doing a lot of the data manipulation inside of R it should not be an issue
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+First I will be creating the database and loading the data into the database. But before I load the data into the database I will also clean up the data in R first
+```{r Creating Table}
+library(DBI)
+conn = dbConnect(RSQLite::SQLite(), "database.db")
+```
+
+```{r Cleaning Data}
+data_set
+```
+
+Looking at the dataset we can see that there are many colmns that are most likely not going to be needed. We can also see that some of the movie ratings are NA which mean that person did not see that movie.
+
+```{r Fixing the dataset}
+library(reshape2)
+library(dplyr)
+
+data_set = data_set[c('Start time', 'Completion time', 'Name2', 'Bad Boys', 'The Rock', 'Armageddon', 'Bad Boys II', 'The Island', 'Transformers', 'Transformers: Revenge of the Fallen', 'Transformers: Dark of the Moon', 'Pain & Gain', 'Transformers: Age of Extinction', '13 Hours: The Secret Soldiers of Benghazi', '6 Underground')]
+
+data_set = melt(data_set, id=c('Start time', 'Completion time', 'Name2'), variable.name = 'Movie', value.name = 'Rating')
+
+data_set = data_set %>% rename(Participant = Name2)
+
+data_set
+```
+
+Now that the data has been cleaned I am going to load the data into the database that was created with SQLite. The reason why I set the table to be overwritten every time I import is because I will not be appending and instead erasing the table and uploading the information again every time
+```{r loading the dataset}
+dbWriteTable(conn, 'movie_rating', data_set, overwrite = TRUE)
+```
+
+Verifying that the data went into the database correctly
+```{r verifying the data in the database}
+dbListTables(conn)
+dbReadTable(conn, 'movie_rating')
+```
+
+Looking at the columns Start time and Completion time it seems like that they need to be converted back into time units
+```{r}
+c = dbSendQuery(conn, "SELECT 
+                  datetime([Start time],'unixepoch', 'localtime') AS [Start Time],
+                  datetime([Completion time], 'unixepoch', 'localtime') AS [Completion Time],
+                  Participant,
+                  Movie,
+                  Rating
+                FROM movie_rating")
+dbFetch(c)
+```
+
+Seeing as I have fixed the datetime issue I will put it into a new table with the fix datetime
+```{r}
+if (dbExistsTable(conn, 'movie_rating_fix')) {
+  dbRemoveTable(conn, 'movie_rating_fix')
+}
+
+
+dbExecute(conn, "CREATE TABLE movie_rating_fix
+                AS
+                  SELECT
+                  datetime([Start time],'unixepoch', 'localtime') AS [Start Time],
+                  datetime([Completion time], 'unixepoch', 'localtime') AS [Completion Time],
+                  Participant,
+                  Movie,
+                  Rating
+                  FROM movie_rating
+                ")
+
+dbReadTable(conn, 'movie_rating_fix')
+```
+
+
+# Conclusion
+If I were to do this survey again I would let my participants know that rating all of the movies is optional. The participants would rate a movie 1 star even if they have never seen it and didnt know that they can skip rating a movie.
 
