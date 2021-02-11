@@ -1,6 +1,8 @@
 ---
 title: "Micheal Bay Movie Survey"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 
@@ -44,7 +46,7 @@ data_set = melt(data_set, id=c('Start time', 'Completion time', 'Name2'), variab
 
 data_set = data_set %>% rename(Participant = Name2)
 
-data_set
+head(data_set)
 ```
 
 Now that the data has been cleaned I am going to load the data into the database that was created with SQLite. The reason why I set the table to be overwritten every time I import is because I will not be appending and instead erasing the table and uploading the information again every time
@@ -53,13 +55,13 @@ dbWriteTable(conn, 'movie_rating', data_set, overwrite = TRUE)
 ```
 
 Verifying that the data went into the database correctly
-```{r verifying the data in the database}
+```{r verifying the data in the database, results='hide'}
 dbListTables(conn)
 dbReadTable(conn, 'movie_rating')
 ```
 
 Looking at the columns Start time and Completion time it seems like that they need to be converted back into time units
-```{r}
+```{r, results='hide'}
 c = dbSendQuery(conn, "SELECT 
                   datetime([Start time],'unixepoch', 'localtime') AS [Start Time],
                   datetime([Completion time], 'unixepoch', 'localtime') AS [Completion Time],
@@ -71,7 +73,7 @@ dbFetch(c)
 ```
 
 Seeing as I have fixed the datetime issue I will put it into a new table with the fix datetime
-```{r}
+```{r, results='hide'}
 if (dbExistsTable(conn, 'movie_rating_fix')) {
   dbRemoveTable(conn, 'movie_rating_fix')
 }
@@ -90,8 +92,53 @@ dbExecute(conn, "CREATE TABLE movie_rating_fix
 
 dbReadTable(conn, 'movie_rating_fix')
 ```
+If a participant did not see a movie then we can see that the rating will be NULL in SQL. We can see that a participant has not seen a lot of Micheal Bay movies which is a shame.
 
+```{R Null ratings, results='hide'}
+c = dbSendQuery(conn, "SELECT * FROM movie_rating_fix WHERE Rating IS NULL")
+
+dbFetch(c)
+```
+# Anaylsis of Michael Bay Movie
+
+We are going to see that is the average rating of each rating in order to see which one to recommend. I am also going to make sure to not include any null values as that means the person has not seen the movie before. I personally would recommend Armageddon because why train astronauts to become drillers when you can train drillers to become astronauts. Makes total sense to me.
+```{r Boxplot of Movie Rating}
+c = dbSendQuery(conn, "SELECT 
+                      movie, Rating, Participant
+                      FROM movie_rating_fix
+                      WHERE Rating IS NOT NULL")
+
+rating = dbFetch(c)
+dbClearResult(c)
+
+library(ggplot2)
+
+ggplot(data=rating, aes(x=reorder(Movie, Rating, FUN=median), y=Rating)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + geom_jitter(position=position_jitter(0.2)) + ggtitle("Box Plot of Michael Bay Movie Rating") + xlab('Michael Bay Movie')
+```
+We can see that Transformers is clearly the highest rated Micheal Bay movie based on my survey of 5 people. But a boxplot may not have a clear answer shown by the movie Transformers: Age of Extinction. We can see that the spread of rating on this movie is quite large but because we are using a box plot and ordering it by the median the movie got a low rating. A box plot may be more appropriate when we have more data but until then using a average might be a more accurate representation.
+
+```{r Average of Movie}
+ggplot(data=rating, aes(x=reorder(Movie, Rating, fun='mean'), y=Rating)) + geom_bar(fun='mean', stat='summary') + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ggtitle('Average Rating of Michael Bay Movie') + xlab('Michael Bay Movie')
+```
+Using the average rating we can see that Transformers is still the highest rated movie therefore based on the data I would recommend one to watch transformers. (I would also still recommend watching Armageddon)
+
+## Participant Rating Bias
+
+Another thing to see is if a participant has any rating Bias. Everyone has a different way of rating and some people might say 3 stars is average while other people will say that 3 stars is terrible movie.
+
+```{r}
+ggplot(data=rating, aes(x=reorder(Participant, Rating, fun='mean'), y=Rating)) + geom_bar(fun='mean', stat='summary')
+```
+
+```{r}
+rating %>%
+  filter(Participant != 'Gintas') %>%
+  group_by(Participant) %>%
+  summarise(avg_rating = mean(Rating))
+```
+
+I would recommend taking out Gintas as a participant since he has only watched one Michael Bay movie. With Gintas removed we can also see 3/4 of the participant have ratings less than 3.
 
 # Conclusion
-If I were to do this survey again I would let my participants know that rating all of the movies is optional. The participants would rate a movie 1 star even if they have never seen it and didnt know that they can skip rating a movie.
+If I were to do this survey again I would let my participants know that rating all of the movies is optional. The participants would rate a movie 1 star even if they have never seen it and did not know that skipping was a option. Another improvement that I would do to the survey is to create a more standardized rating system where 3 star would be average. In my survey I allowed the participants to create their own system to rate out of 5 stars and that can make certain participants outliers. Based on the data I would recommend everyone to watch Transformers.  
 
