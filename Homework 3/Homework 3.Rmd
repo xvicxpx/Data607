@@ -1,0 +1,75 @@
+---
+title: "CUNY SPS Data 607 Assignment 3"
+output: html_notebook
+---
+
+# 1
+Using the 173 majors listed in fivethirtyeight.com’s College Majors dataset [https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/], provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r}
+majors = read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv')
+
+head(majors)
+```
+```{r}
+unique(majors$Major)
+```
+
+```{r}
+library(tidyverse)
+
+majors %>%
+  filter(str_detect(Major, 'DATA|STATISTICS'))
+```
+We can see that there are 3 majors which include the the words DATA and STATISTICS in them
+
+# 2
+
+[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+
+[13] "olive"        "salal berry"
+
+
+```{r loading the string into R}
+string = '[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+
+[13] "olive"        "salal berry"'
+
+
+string = unlist(str_extract_all(string, pattern = "\"([a-z]+.[a-z]+)\""))
+string = str_remove_all(string, "\"")
+```
+
+
+# 3 Describe, in words, what these expressions will match:
+
+    1. (.)\1\1
+    2. "(.)(.)\\2\\1"
+    3. (..)\1
+    4. "(.).\\1.\\1"
+    5. "(.)(.)(.).*\\3\\2\\1"
+
+
+    1. This will match the first letter and repeat it twice. Examples are "aaa", "bbb"
+    2. This will store the first and second letter, repeat the second letter, and then state the first letter. Examples are "abba"
+    3. This will store the first two letters and repeat them. Examples are "abab"
+    4. This will store the first letter and allow anything for the second letter. Then repeat the first letter, allow for any letter then repeat the first letter again. Examples are "abaca"
+    5. This will store the first 3 letters and allow for any letter in the 4th position. The * will then allow any letter of any length and will look for the ending of the first 3 letters backwards. Examples are "abcefghicba"
+
+# 4 Construct regular expressions to match words that:
+
+    1. Start and end with the same character.
+    2. Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+    3. Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+
+    1. "^(.).*\\1$"
+    2. "(..).*\\1"
+    3. "(.)+"
