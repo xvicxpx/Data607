@@ -1,19 +1,141 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Project 1"
+author: "Vic Chan"
+output:
+  html_document:
+    df_print: paged
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+# Task
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+In this project, you’re given a text file with chess tournament results where the information has some structure.  Your job is to create an R Markdown file that generates a .CSV file (that could for example be imported into a SQL database) with the following information for all of the players:Player’s Name, Player’s State, Total Number of Points, Player’s Pre-Rating, and Average Pre Chess Rating of OpponentsFor the first player, the information would be:Gary Hua, ON, 6.0, 1794, 16051605 was calculated by using the pre-tournament opponents’ ratings of 1436, 1563, 1600, 1610, 1649, 1663, 1716, and dividing by the total number of games played. If you have questions about the meaning of the data or the results, please post them on the discussion forum.  Data science, like chess, is a game of back and forth... The chess rating system (invented by a Minnesota statistician named Arpad Elo) has been used in many other contexts, including assessing relative strength of employment candidates by human resource departments.You may substitute another text file (or set of text files, or data scraped from web pages) of similar or greater complexity, and create your own assignment and solution.  You may work in a small team.  All of your code should be in an R markdown file (and published to rpubs.com); with your data accessible for the person running the script.
 
-```{r}
-plot(cars)
+# Loading Text File
+
+First we will load the data and also remove the first 4 rows of the dataset since they are not neccessary
+```{r Loading Chess Data Set}
+chess = read.table(url("https://raw.githubusercontent.com/xvicxpx/Data607/main/Project%201/tournamentinfo.txt"), skip = 4, sep=",")
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+# Extracting first row of data
+We know that the players information is stored in every two rows. We will work one row at a time extracting the information first the players name. Extracting the persons name will also allow access to the Total points and who the player was up against
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r Extracting players name}
+id = c()
+name = c()
+tot_num_points = c()
+r1 = c()
+r2 = c()
+r3 = c()
+r4 = c()
+r5 = c()
+r6 = c()
+r7 = c()
+
+chess_substr = function(str){
+  return(strtoi(substr(str, 4, 5)))
+}
+
+
+for(x in seq(from=1, to=nrow(chess), by=3))
+{
+  row = unlist(strsplit(chess[x,], "|", fix=TRUE))
+  id = c(id, trimws(row[1]))
+  name = c(name, trimws(row[2]))
+  tot_num_points = c(tot_num_points, as.double(trimws(row[3])))
+  r1 = c(r1, chess_substr(row[4]))
+  r2 = c(r2, chess_substr(row[5]))
+  r3 = c(r3, chess_substr(row[6]))
+  r4 = c(r4, chess_substr(row[7]))
+  r5 = c(r5, chess_substr(row[8]))
+  r6 = c(r6, chess_substr(row[9]))
+  r7 = c(r7, chess_substr(row[10]))
+  
+  # print(chess[x,])
+}
+
+r1 = as.character(r1)
+r2 = as.character(r2)
+r3 = as.character(r3)
+r4 = as.character(r4)
+r5 = as.character(r5)
+r6 = as.character(r6)
+r7 = as.character(r7)
+```
+
+# Extracting second row of data
+
+Now that we extracted the first row of data now we also need to extract the second row of data. The second row of data includes players state and the players pre-rating
+
+```{r}
+library(stringr)
+
+player_state = c()
+player_pre_rating = c()
+
+for(x in seq(from=2, to=nrow(chess), by=3))
+{
+  row = unlist(strsplit(chess[x,], "|", fix=TRUE))
+  player_state = c(player_state, trimws(row[1]))
+  
+  rating = str_extract(str_replace_all(row[2], " ", ""), "R:\\d{3,4}")
+  
+  player_pre_rating = c(player_pre_rating, as.numeric(substr(rating, 3, nchar(rating))))
+  
+  # print(chess[x,])
+}
+```
+
+# Combining the Vectors into a dataframe
+
+Now that we have all the data inside a vector we can join everything into a dataframe and start to do calculations with the dataframe
+
+```{r}
+chess_table = data.frame(id, name, player_state, tot_num_points, player_pre_rating, r1, r2, r3, r4, r5, r6, r7)
+```
+
+# Computing Average Pre Chess Rating of Opponent
+
+Now that we have a list of all the players, ranking, and who the players played against now we are able to calculate what is the average pre chess rating of the players Opponent. First will unpivot the table and do a join back on the main table in order to calculate the opponents ranking
+
+
+```{r}
+library(reshape2)
+library(dplyr)
+
+chess_unpivot = melt(chess_table, id.vars = c('id', 'name', 'player_state', 'tot_num_points', 'player_pre_rating'), variable.name = "round", value.name = "opponent_id")
+
+chess_unpivot = chess_unpivot %>%
+  filter(!is.na(opponent_id)) 
+
+player_rating_table = chess_table %>%
+  select(opponent_id = id, opponent_rating = player_pre_rating, )
+```
+
+```{r}
+library(dplyr)
+
+hold = left_join(x=chess_unpivot, y=player_rating_table, x.by="opponent_id", y.by="opponent_id")
+
+final = hold %>%
+  group_by(id, name, player_state, tot_num_points, player_pre_rating) %>%
+  summarise(opponent_avg_pre_rating = mean(opponent_rating))
+```
+
+# Analysing the Dataset
+```{r}
+library(ggplot2)
+
+ggplot(data=final, aes(x=opponent_avg_pre_rating, y=tot_num_points)) + geom_point() + geom_text(aes(label=name), hjust=0,vjust=2, size=1)
+```
+We can see that Gary Hua scored the most points relative to his/her expected results.
+
+# Exporting into CSV
+
+With the final result we and the opponent average we can now save the results into a csv
+
+```{r}
+write.table(final, file="Chess Rating.csv", sep=",")
+```
 
