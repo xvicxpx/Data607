@@ -1,0 +1,43 @@
+﻿"Labour force characteristics, monthly, seasonally adjusted and trend-cycle, last 5 months" 1 2 3
+"Monthly"
+"Table: 14-10-0287-01 (formerly CANSIM 282-0087)"
+"Geography: Canada, Province or territory"
+
+"","","Canada",,,,,,,,,,,,,,,,,,,,,,,,
+"","","Both sexes",,,,,,,,,,,,,,,,,,,,,,,,
+"","","15 years and over",,,,,,,,,,,,,,,,,,,,,,,,
+"","","Estimate",,,,,,,,,,,,,,,,,,,,,,,,
+"Labour force characteristics","Data type","January 2019","February 2019","March 2019","April 2019","May 2019","June 2019","July 2019","August 2019","September 2019","October 2019","November 2019","December 2019","January 2020","February 2020","March 2020","April 2020","May 2020","June 2020","July 2020","August 2020","September 2020","October 2020","November 2020","December 2020","January 2021"
+"","","Persons",,,,,,,,,,,,,,,,,,,,,,,,
+"Population 5 6","Seasonally adjusted (x 1,000)","30,479.8","30,507.8","30,542.6","30,589.0","30,630.4","30,674.7","30,727.5","30,763.6","30,808.9","30,842.3","30,872.5","30,897.9","30,924.2","30,949.3","30,978.8","30,994.3","31,009.1","31,037.0","31,061.6","31,084.7","31,114.6","31,138.8","31,161.3","31,177.5","31,191.2"
+"Labour force 7","Seasonally adjusted (x 1,000)","19,996.5","20,044.5","20,030.0","20,130.2","20,079.1","20,117.0","20,134.0","20,220.5","20,205.7","20,217.2","20,215.6","20,222.9","20,243.0","20,276.0","19,687.6","18,585.4","19,053.8","19,860.1","19,985.3","20,071.1","20,246.7","20,316.2","20,279.9","20,258.8","20,171.0"
+"Employment 8","Seasonally adjusted (x 1,000)","18,815.6","18,867.3","18,860.8","18,963.3","18,985.6","18,990.0","18,968.7","19,043.9","19,081.4","19,078.8","19,020.3","19,074.3","19,106.1","19,130.3","18,133.8","16,141.6","16,444.0","17,385.7","17,802.6","18,016.3","18,388.5","18,482.9","18,537.5","18,484.8","18,272.0"
+"Full-time employment 9","Seasonally adjusted (x 1,000)","15,216.8","15,276.6","15,282.6","15,353.6","15,379.7","15,402.4","15,393.6","15,411.8","15,473.8","15,455.8","15,431.3","15,484.3","15,519.2","15,555.5","15,086.2","13,606.6","13,861.6","14,359.5","14,454.1","14,626.4","14,909.2","14,967.3","15,077.0","15,119.7","15,132.3"
+"Part-time employment  10","Seasonally adjusted (x 1,000)","3,598.8","3,590.7","3,578.2","3,609.7","3,605.9","3,587.6","3,575.0","3,632.1","3,607.5","3,623.0","3,589.1","3,590.0","3,586.9","3,574.8","3,047.6","2,535.0","2,582.4","3,026.2","3,348.4","3,390.0","3,479.3","3,515.6","3,460.5","3,365.1","3,139.7"
+"Unemployment 11","Seasonally adjusted (x 1,000)","1,180.9","1,177.2","1,169.2","1,166.9","1,093.6","1,127.0","1,165.3","1,176.6","1,124.4","1,138.4","1,195.3","1,148.7","1,136.8","1,145.7","1,553.8","2,443.9","2,609.8","2,474.4","2,182.8","2,054.8","1,858.2","1,833.2","1,742.5","1,773.9","1,899.0"
+"","","Percentage",,,,,,,,,,,,,,,,,,,,,,,,
+"Unemployment rate 12","Seasonally adjusted","5.9","5.9","5.8","5.8","5.4","5.6","5.8","5.8","5.6","5.6","5.9","5.7","5.6","5.7","7.9","13.1","13.7","12.5","10.9","10.2","9.2","9.0","8.6","8.8","9.4"
+"Participation rate 13","Seasonally adjusted","65.6","65.7","65.6","65.8","65.6","65.6","65.5","65.7","65.6","65.6","65.5","65.5","65.5","65.5","63.6","60.0","61.4","64.0","64.3","64.6","65.1","65.2","65.1","65.0","64.7"
+"Employment rate 14","Seasonally adjusted","61.7","61.8","61.8","62.0","62.0","61.9","61.7","61.9","61.9","61.9","61.6","61.7","61.8","61.8","58.5","52.1","53.0","56.0","57.3","58.0","59.1","59.4","59.5","59.3","58.6"
+
+Symbol legend:
+
+Footnotes:
+1,"Fluctuations in economic time series are caused by seasonal, cyclical and irregular movements. A seasonally adjusted series is one from which seasonal movements have been eliminated. Seasonal movements are defined as those which are caused by regular annual events such as climate, holidays, vacation periods and cycles related to crops, production and retail sales associated with Christmas and Easter. It should be noted that the seasonally adjusted series contain irregular as well as longer-term cyclical fluctuations. The seasonal adjustment program is a complicated computer program which differentiates between these seasonal, cyclical and irregular movements in a series over a number of years and, on the basis of past movements, estimates appropriate seasonal factors for current data. On an annual basis, the historic series of seasonally adjusted data are revised in light of the most recent information on changes in seasonality."
+2,"To ensure respondent confidentiality, estimates below a certain threshold are suppressed. For Canada, Quebec, Ontario, Alberta and British Columbia suppression is applied to all data below 1,500. The threshold level for Newfoundland and Labrador, Nova Scotia, New Brunswick, Manitoba and Saskatchewan is 500, while in Prince Edward Island, estimates under 200 are supressed. For census metropolitan areas (CMAs) and economic regions (ERs), use their respective provincial suppression levels mentioned above. Estimates are based on smaller sample sizes the more detailed the table becomes, which could result in lower data quality."
+3,For more information on seasonal adjustment see Seasonally adjusted data - Frequently asked questions.
+4,Excluding the territories.
+5,"Number of persons of working age, 15 years and over. Estimates in thousands, rounded to the nearest hundred."
+6,"From December 2000 to January 2001, there is a slight level shift in the population series. This is due to the 2015 population rebasing, which was revised back to 2001. This level shift is evident for certain age groups and in two provinces (Manitoba and Saskatchewan). These shifts are minor for labour force estimates and rates."
+7,"Number of civilian, non-institutionalized persons 15 years of age and over who, during the reference week, were employed or unemployed. Estimates in thousands, rounded to the nearest hundred."
+8,"Number of persons who, during the reference week, worked for pay or profit, or performed unpaid family work or had a job but were not at work due to own illness or disability, personal or family responsibilities, labour dispute, vacation, or other reason. Those persons on layoff and persons without work but who had a job to start at a definite date in the future are not considered employed. Estimates in thousands, rounded to the nearest hundred."
+9,"Full-time employment consists of persons who usually work 30 hours or more per week at their main or only job. Estimates in thousands, rounded to the nearest hundred."
+10,"Part-time employment consists of persons who usually work less than 30 hours per week at their main or only job. Estimates in thousands, rounded to the nearest hundred."
+11,"Number of persons who, during the reference week, were without work, had looked for work in the past four weeks, and were available for work. Those persons on layoff or who had a new job to start in four weeks or less are considered unemployed. Estimates in thousands, rounded to the nearest hundred."
+12,"The unemployment rate is the number of unemployed persons expressed as a percentage of the labour force. The unemployment rate for a particular group (age, sex, marital status, etc.) is the number unemployed in that group expressed as a percentage of the labour force for that group. Estimates are percentages, rounded to the nearest tenth."
+13,"The participation rate is the number of labour force participants expressed as a percentage of the population 15 years of age and over. The participation rate for a particular group (age, sex, marital status, etc.) is the number of labour force participants in that group expressed as a percentage of the population for that group. Estimates are percentages, rounded to the nearest tenth."
+14,"The employment rate is the number of persons employed expressed as a percentage of the population 15 years of age and over. The employment rate for a particular group (age, sex, marital status, etc.) is the number employed in that group expressed as a percentage of the population for that group. Estimates are percentages, rounded to the nearest tenth."
+
+"How to cite: Statistics Canada. Table 14-10-0287-01 Labour force characteristics, monthly, seasonally adjusted and trend-cycle, last 5 months"
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701
+DOI: https://doi.org/10.25318/1410028701-eng
