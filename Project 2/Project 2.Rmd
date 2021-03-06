@@ -1,6 +1,13 @@
 ---
 title: "CUNY SPS Data 607 Project 2"
 output: html_notebook
+references:
+- id: StatCan
+  title: Labour force characteristics, monthly, seasonally adjusted and trend-cycle, last 5 months
+  URL: 'https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1410028701'
+  DOI: https://doi.org/10.25318/1410028701-eng
+  publisher: Statistics Canada
+  type: website
 ---
 
 
@@ -14,5 +21,6 @@ The goal of Project 2 is to choose 3 wide datasets and transform the datasets
 
 # Dataset 1 : Canada Unemployment Rate
 
+The dataset that is from Stat Canada which is a government organization which compiles data for the public. The dataset that we will be looking at is the Canada unemployment data [@StatCan]. We can see that this is a wide dataset with all of the months being in the columns. The CSV file also includes a lot of unnecessary information that needs to be cleaned before any analysis can be done on the dataset. 
 
-
+# References

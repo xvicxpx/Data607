@@ -65,6 +65,28 @@ if (window.hljs) {
 }
 </style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -221,10 +243,19 @@ pre code {
 </div>
 <div id="dataset-1-canada-unemployment-rate" class="section level1">
 <h1>Dataset 1 : Canada Unemployment Rate</h1>
+<p>The dataset that is from Stat Canada which is a government organization which compiles data for the public. The dataset that we will be looking at is the Canada unemployment data <span class="citation">(<span>“Labour Force Characteristics, Monthly, Seasonally Adjusted and Trend-Cycle, Last 5 Months,”</span> n.d.)</span>. We can see that this is a wide dataset with all of the months being in the columns. The CSV file also includes a lot of unnecessary information that needs to be cleaned before any analysis can be done on the dataset.</p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
 <!-- rnb-text-end -->
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-StatCan" class="csl-entry">
+<span>“Labour Force Characteristics, Monthly, Seasonally Adjusted and Trend-Cycle, Last 5 Months.”</span> n.d. Statistics Canada. https://doi.org/<a href="https://doi.org/10.25318/1410028701-eng">https://doi.org/10.25318/1410028701-eng</a>.
+</div>
+</div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQ1VOWSBTUFMgRGF0YSA2MDcgUHJvamVjdCAyIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgoKIyBJbnRyb2R1Y3Rpb24KClRoZSBnb2FsIG9mIFByb2plY3QgMiBpcyB0byBjaG9vc2UgMyB3aWRlIGRhdGFzZXRzIGFuZCB0cmFuc2Zvcm0gdGhlIGRhdGFzZXRzCi0gQ3JlYXRlIGEgLkNTViBmaWxlIChvciBvcHRpb25hbGx5LCBhIE15U1FMIGRhdGFiYXNlISkgdGhhdCBpbmNsdWRlcyBhbGwgb2YgdGhlIGluZm9ybWF0aW9uIGluY2x1ZGVkIGluIHRoZSBkYXRhc2V0LiAgWW914oCZcmUgZW5jb3VyYWdlZCB0byB1c2UgYSDigJx3aWRl4oCdIHN0cnVjdHVyZSBzaW1pbGFyIHRvIGhvdyB0aGUgaW5mb3JtYXRpb24gYXBwZWFycyBpbiB0aGUgZGlzY3Vzc2lvbiBpdGVtLCBzbyB0aGF0IHlvdSBjYW4gcHJhY3RpY2UgdGlkeWluZyBhbmQgdHJhbnNmb3JtYXRpb25zIGFzIGRlc2NyaWJlZCBiZWxvdy4KLSBSZWFkIHRoZSBpbmZvcm1hdGlvbiBmcm9tIHlvdXIgLkNTViBmaWxlIGludG8gUiwgYW5kIHVzZSB0aWR5ciBhbmQgZHBseXIgYXMgbmVlZGVkIHRvIHRpZHkgYW5kIHRyYW5zZm9ybSB5b3VyIGRhdGEuICBbTW9zdCBvZiB5b3VyIGdyYWRlIHdpbGwgYmUgYmFzZWQgb24gdGhpcyBzdGVwIV0KLSBQZXJmb3JtIHRoZSBhbmFseXNpcyByZXF1ZXN0ZWQgaW4gdGhlIGRpc2N1c3Npb24gaXRlbS4KLSBZb3VyIGNvZGVzaG91bGQgYmUgaW4gYW4gUiBNYXJrZG93biBmaWxlLCBwb3N0ZWQgdG8gcnB1YnMuY29tLCBhbmQgc2hvdWxkIGluY2x1ZGUgbmFycmF0aXZlIGRlc2NyaXB0aW9ucyBvZiB5b3VyIGRhdGEgY2xlYW51cCB3b3JrLCBhbmFseXNpcyxhbmQgY29uY2x1c2lvbnMuCgojIERhdGFzZXQgMSA6IENhbmFkYSBVbmVtcGxveW1lbnQgUmF0ZQoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQ1VOWSBTUFMgRGF0YSA2MDcgUHJvamVjdCAyIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKcmVmZXJlbmNlczoKLSBpZDogU3RhdENhbgogIHRpdGxlOiBMYWJvdXIgZm9yY2UgY2hhcmFjdGVyaXN0aWNzLCBtb250aGx5LCBzZWFzb25hbGx5IGFkanVzdGVkIGFuZCB0cmVuZC1jeWNsZSwgbGFzdCA1IG1vbnRocwogIFVSTDogJ2h0dHBzOi8vd3d3MTUwLnN0YXRjYW4uZ2MuY2EvdDEvdGJsMS9lbi9jdi5hY3Rpb24/cGlkPTE0MTAwMjg3MDEnCiAgRE9JOiBodHRwczovL2RvaS5vcmcvMTAuMjUzMTgvMTQxMDAyODcwMS1lbmcKICBwdWJsaXNoZXI6IFN0YXRpc3RpY3MgQ2FuYWRhCiAgdHlwZTogd2Vic2l0ZQotLS0KCgojIEludHJvZHVjdGlvbgoKVGhlIGdvYWwgb2YgUHJvamVjdCAyIGlzIHRvIGNob29zZSAzIHdpZGUgZGF0YXNldHMgYW5kIHRyYW5zZm9ybSB0aGUgZGF0YXNldHMKLSBDcmVhdGUgYSAuQ1NWIGZpbGUgKG9yIG9wdGlvbmFsbHksIGEgTXlTUUwgZGF0YWJhc2UhKSB0aGF0IGluY2x1ZGVzIGFsbCBvZiB0aGUgaW5mb3JtYXRpb24gaW5jbHVkZWQgaW4gdGhlIGRhdGFzZXQuICBZb3XigJlyZSBlbmNvdXJhZ2VkIHRvIHVzZSBhIOKAnHdpZGXigJ0gc3RydWN0dXJlIHNpbWlsYXIgdG8gaG93IHRoZSBpbmZvcm1hdGlvbiBhcHBlYXJzIGluIHRoZSBkaXNjdXNzaW9uIGl0ZW0sIHNvIHRoYXQgeW91IGNhbiBwcmFjdGljZSB0aWR5aW5nIGFuZCB0cmFuc2Zvcm1hdGlvbnMgYXMgZGVzY3JpYmVkIGJlbG93LgotIFJlYWQgdGhlIGluZm9ybWF0aW9uIGZyb20geW91ciAuQ1NWIGZpbGUgaW50byBSLCBhbmQgdXNlIHRpZHlyIGFuZCBkcGx5ciBhcyBuZWVkZWQgdG8gdGlkeSBhbmQgdHJhbnNmb3JtIHlvdXIgZGF0YS4gIFtNb3N0IG9mIHlvdXIgZ3JhZGUgd2lsbCBiZSBiYXNlZCBvbiB0aGlzIHN0ZXAhXQotIFBlcmZvcm0gdGhlIGFuYWx5c2lzIHJlcXVlc3RlZCBpbiB0aGUgZGlzY3Vzc2lvbiBpdGVtLgotIFlvdXIgY29kZXNob3VsZCBiZSBpbiBhbiBSIE1hcmtkb3duIGZpbGUsIHBvc3RlZCB0byBycHVicy5jb20sIGFuZCBzaG91bGQgaW5jbHVkZSBuYXJyYXRpdmUgZGVzY3JpcHRpb25zIG9mIHlvdXIgZGF0YSBjbGVhbnVwIHdvcmssIGFuYWx5c2lzLGFuZCBjb25jbHVzaW9ucy4KCiMgRGF0YXNldCAxIDogQ2FuYWRhIFVuZW1wbG95bWVudCBSYXRlCgpUaGUgZGF0YXNldCB0aGF0IGlzIGZyb20gU3RhdCBDYW5hZGEgd2hpY2ggaXMgYSBnb3Zlcm5tZW50IG9yZ2FuaXphdGlvbiB3aGljaCBjb21waWxlcyBkYXRhIGZvciB0aGUgcHVibGljLiBUaGUgZGF0YXNldCB0aGF0IHdlIHdpbGwgYmUgbG9va2luZyBhdCBpcyB0aGUgQ2FuYWRhIHVuZW1wbG95bWVudCBkYXRhIFtAU3RhdENhbl0uIFdlIGNhbiBzZWUgdGhhdCB0aGlzIGlzIGEgd2lkZSBkYXRhc2V0IHdpdGggYWxsIG9mIHRoZSBtb250aHMgYmVpbmcgaW4gdGhlIGNvbHVtbnMuIFRoZSBDU1YgZmlsZSBhbHNvIGluY2x1ZGVzIGEgbG90IG9mIHVubmVjZXNzYXJ5IGluZm9ybWF0aW9uIHRoYXQgbmVlZHMgdG8gYmUgY2xlYW5lZCBiZWZvcmUgYW55IGFuYWx5c2lzIGNhbiBiZSBkb25lIG9uIHRoZSBkYXRhc2V0LiAKCiMgUmVmZXJlbmNlcwo=</div>
 
 
 
