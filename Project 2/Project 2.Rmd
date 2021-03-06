@@ -8,6 +8,11 @@ references:
   DOI: https://doi.org/10.25318/1410028701-eng
   publisher: Statistics Canada
   type: website
+- id: Covid
+  title: UNCOVER COVID 19 Challenge
+  URL: 'https://www.kaggle.com/roche-data-science-coalition/uncover'
+  publisher: Kaggle
+  type: website
 ---
 
 
@@ -22,5 +27,114 @@ The goal of Project 2 is to choose 3 wide datasets and transform the datasets
 # Dataset 1 : Canada Unemployment Rate
 
 The dataset that is from Stat Canada which is a government organization which compiles data for the public. The dataset that we will be looking at is the Canada unemployment data [@StatCan]. We can see that this is a wide dataset with all of the months being in the columns. The CSV file also includes a lot of unnecessary information that needs to be cleaned before any analysis can be done on the dataset. 
+
+## Importing CSV File and Cleaning Data
+
+We first need to import the CSV file from github and then clean then dataset for analysis. Just looking at the csv file in a raw format we can see that there is a lot of data that is unnecessary that needs to be ignored.
+
+```{r Importing and Cleaning Data}
+unemployment = read.csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Project%202/Canada%20Unemployment%20Data.csv', skip=9)
+
+unemployment = unemployment[-c(1, 8:30),]
+
+unemployment = unemployment[-c(2)]
+
+unemployment[1, 1] = 'Population'
+unemployment[2, 1] = 'Labour Force'
+unemployment[3, 1] = 'Employed'
+unemployment[4, 1] = 'Full Time Employment'
+unemployment[5, 1] = 'Part TIme Employment'
+unemployment[6, 1] = 'Unemployed'
+```
+
+
+## Unpivoting the dataset
+
+Now that the data has been cleaned we are going unpivot the dataset in order to make it easier to do analysis. In Tidyr the function is called pivot_wider() which has replaced the old gather function.
+
+```{r}
+library(tidyr)
+
+unemployment = unemployment %>%
+  pivot_longer(cols = c(2:26), names_to = "Month_Year", values_to = "Num_of_People") %>%
+  pivot_wider(names_from = "Labour.force.characteristics", values_from = "Num_of_People")
+```
+
+It seems like that the dataset thinks that all the numbers are characters so we need to fix that first
+
+```{r}
+unemployment[, c(2:7)] = lapply(unemployment[, c(2:7)], function(x){as.numeric(gsub(",", "", x))})
+```
+
+
+As you can see we unpivot the data and then repivot the data. The reason for doing this is because it will be easier to calculate the unemployment percentage by month in this format.
+
+```{r}
+library(dplyr)
+
+unemployment = unemployment %>%
+  mutate(unemployment_percent = Unemployed /`Labour Force`)
+```
+
+I also need to fix the date as R is unable to understand month names 
+
+```{r}
+library(lubridate)
+
+unemployment$Month_Year = parse_date_time(unemployment$Month_Year, orders = "bY")
+```
+
+
+## Analysis
+
+```{r}
+library(ggplot2)
+
+unemployment %>%
+  ggplot(aes(x=Month_Year, y=unemployment_percent)) + geom_line()
+```
+We can see that there is a huge spike in unemployment rates and that is due to COVID. The surprising part is that unemployment rates are going back up and that is most likely due to a resurgence of COVID in Canada. Without more data that has a COVID like event it is hard to see how the unemployment rate is going to go. One interesting thing is to see if there is any correlation between COVID cases and unemployment rates.
+
+# Dataset 2 : COVID
+
+## Loading CSV and Cleaning Data
+
+As what we did with the last dataset we will load the dataset and see if there needs to be any cleaning involved
+
+```{r}
+covid = read.csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Project%202/Covid%20Dataset.csv')
+covid = covid[-c(1:8, 224:231),]
+```
+
+We can see that there are a couple of columns that are not necessary. We will also be removing some unnecessary rows that does not help us with the analysis
+
+```{r}
+covid = covid %>%
+  select(country, total_cases, total_deaths, total_recovered, serious_critical_cases, total_tests, population)
+```
+
+Since this data is quite clean there isnt a need to do a lot of transformation
+
+## Analysis
+
+One thing that is interesting to look at is which country has the most test and cases. The reason why this is interesting is because countries that test more will have more cases and I want to see if there a trend.
+
+```{r}
+covid %>%
+  ggplot(aes(x=total_tests, y=total_cases)) + geom_point() + geom_text(aes(label=country), hjust=0,vjust=2)
+```
+It seems like that there is no real correlation between cases of covid and testing. One thing that is interesting is how USA and Brazil is testing the same amount as country like Mexico, France, and UK yet USA and Brazil still have a lot more total cases. 
+
+Using library called GGally I am going to create a scatterplot matrix to look for correlations
+```{r}
+library(GGally)
+
+covid %>%
+  select(total_cases, total_deaths, total_tests) %>%
+  ggpairs()
+```
+We can see that there isnt that much correlations in this dataset there is a correlation between cases and deaths. This makes sense as with more cases there is also going to be more covid deaths. One interesting thing to look at is certain countries like China which does not openly provide data. It would have been interesting to see if they made a mistake in their data and showed more deaths than cases which shows that they are underreporting the covid cases.
+
+# Dataset 3 : 
 
 # References
