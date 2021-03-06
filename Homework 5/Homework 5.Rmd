@@ -1,0 +1,91 @@
+---
+title: "Data 607 Week 5 Assignment"
+output: html_notebook
+---
+
+# Introduction
+In this assignment we are to create a table commonly seen in excel and convert it into a format that allows R to easily manipulate in order to do data analysis on.
+
+# Reading CSV file
+This dataset has been uploaded to Github and is a csv file converted from excel. Making sure in the parameters to fill all the blanks with NA. We are going to need to fix the NA in the next step
+
+```{r}
+air = read.csv("https://raw.githubusercontent.com/xvicxpx/Data607/main/Homework%205/Airline.csv", header = TRUE, na.strings = "")
+```
+
+# Fixing the NA
+Since we know that the Airline NA are always going to be on the even rows and will be using row on top of it to be filling in the data. This is easily solved with a loop and manipulation of the dataframe
+
+```{r}
+for(x in seq(from=2, to=nrow(air), by=2))
+{
+  air[x, 1] = air[x-1, 1]
+}
+```
+
+# Using tidyr gather function
+Next we are going to be breaking down the dataset in order to maker it easier for analysis and manipulation. In SQL this is called a unpivot and in the tidyr this is called the gather function
+
+```{r}
+library(tidyr)
+
+air_unpivot = air %>%
+  gather(key="City", value="Count", c("Los.Angeles","Phoenix", "San.Diego", "San.Francisco", "Seattle"))
+
+```
+
+# Splitting On Time and Delays
+We are going to split out the On Time and Delays into their own columns so that it will be easier to calculate a on time performance by taking the total amount of flights and dividing by how many flights are on time
+```{r}
+library(dplyr)
+
+air_unpivot_2 = air_unpivot %>%
+  spread(key="Status", value="Count")
+
+air_unpivot_2 = air_unpivot_2 %>%
+  rename(on_time = `on time`)
+
+air_unpivot_2 = air_unpivot_2 %>%
+  mutate(otp = on_time/(on_time + delay))
+```
+
+# Data Analysis
+
+## Airline OTP by City
+We can see that Alaska Airline has to Phoenix has the highest on time performance, but that is not that impressive given the amount of flights Alaska Airline has to Phoenix. I would give the best Air On Time Performance to AM WEST to phoenix as even with 5255 flights it is still able to have a 92% on time performance rating
+
+```{r}
+air_unpivot_2 = air_unpivot_2 %>%
+  mutate(otp = on_time/(on_time + delay)) %>%
+  arrange(desc(otp))
+
+air_unpivot_2
+```
+
+## Overall on Time Performance
+Overall we can see that AM WEST has a better on time performance compared to ALASKA, and both are very close in on time performance. If one was to look at only overall on time performance they one would easily recommend AM WEST but if one looks at the data by city one will see that AM WEST underperforms significantly against ALASKA against all routes. This shows that looking closer at the data is very important and that AM WEST on time performance numbers are inflated because they have a lot of flights to Phoenix with a high on time performance therefore it increases their overall on time performance. We can see that without the Phoenix route AM WEST on time performance is now lower compared to ALASKA
+
+```{r}
+air_unpivot_2 %>%
+  select(Airline, delay, on_time) %>%
+  group_by(Airline) %>%
+  summarise(delay = sum(delay), on_time = sum(on_time), otp = sum(on_time) / (sum(on_time) + sum(delay))) %>%
+  arrange(desc(otp))
+```
+
+```{r removing phoenix}
+air_unpivot_2 %>%
+  filter(City != "Phoenix") %>%
+  select(Airline, delay, on_time) %>%
+  group_by(Airline) %>%
+  summarise(delay = sum(delay), on_time = sum(on_time), otp = sum(on_time) / (sum(on_time) + sum(delay))) %>%
+  arrange(desc(otp))
+```
+
+
+## Overall vs Per City OTP
+The reason for the discrepancy between the per-city and the overall on time performance is because of AM WEST Phoenix route which had a high weight and on time performance when calculating the overall on time performance. But when one looks closely at the data they will see that AM WEST in consistently behind ALASKA in every route, and when taking Phoenix route out of the equation ALASKA had a higher on time performance
+
+# Conclusion
+Based on the data provided I would overall I would recommend that everyone fly with ALASKA as they are consistently have better on time performance in every route compared to AM WEST. But I would recommend that anyone flying to Phoenix fly with AM WEST as the on time performance is on par with ALASKA and they have a lot more flights to Phoenix compared to ALASKA
+
