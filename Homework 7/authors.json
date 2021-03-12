@@ -1,0 +1,36 @@
+{
+    "books": [
+        {
+            "title": "Introductory Statistics 1st Edition",
+            "author": "Barbara Illowsky, Susan Dean",
+            "publisher": "OpenStax",
+            "publication_date": "09/19/2013",
+            "ISBN-13": "978-1938168208",
+            "url": "https://www.amazon.com/Introductory-Statistics-Barbara-Illowsk-ebook/dp/B075FF48ST/ref=sr_1_3?dchild=1&keywords=Statistics+textbook&qid=1615582866&sr=8-3"
+        },
+        {
+            "title": "Statistics, 4th Edition",
+            "author": "David Freedman, Robert Pisani, Roger Purves",
+            "publisher": "W. W. Norton & Company",
+            "publication_date": "02/13/2007",
+            "ISBN-13": "978-0393929720",
+            "url": "https://www.amazon.com/Statistics-4th-David-Freedman/dp/0393929728/ref=sr_1_4?dchild=1&keywords=Statistics+textbook&qid=1615583202&sr=8-4"
+        },
+        {
+            "title": "Elementary Statistics 13th Edition",
+            "author": "Mario Triola",
+            "publisher": "Pearson",
+            "publication_date": "01/01/2017",
+            "ISBN-13": "978-0134462455",
+            "url": "https://www.amazon.com/Elementary-Statistics-13th-Mario-Triola/dp/0134462459/ref=sr_1_2?dchild=1&keywords=Statistics+textbook&qid=1615583323&sr=8-2"
+        },
+        {
+            "title": "Naked Statistics: Stripping the Dread from the Data",
+            "author": "Charles Wheelan",
+            "publisher": "W. W. Norton & Company",
+            "publication_date": "01/13/2014",
+            "ISBN-13": "978-0393347777",
+            "url": "https://www.amazon.com/Naked-Statistics-Stripping-Dread-Data/dp/039334777X/ref=sr_1_5?dchild=1&keywords=Statistics+textbook&qid=1615583394&sr=8-5"
+        }
+    ]
+  }
