@@ -8,4 +8,49 @@ output: html_notebook
 
 Pick three of your favorite books on one of your favorite subjects.   At least one of the books should have more than one author.  For each book, include the title, authors, and two or three other attributes that you find interesting.Take the information that you’ve selected about these three books, and separately create three files which store the book’s information in HTML (using an html table),  XML, and JSON formats (e.g.  “books.html”, “books.xml”, and “books.json”).  To help you better understand the different file structures, I’d prefer that you create each of these files “by hand” unless you’re already very comfortable with the file formats.Write R code, using your packages of choice, to load the information from each of the three sources into separate R data frames.   Are the three data frames identical?Your deliverable is the three source files and the R code.  If you can, package your assignment solution up into an .Rmd file and publish to rpubs.com.  [This will also require finding a way to make your three text files accessible from the web].
 
+# Importing of HTML Table
 
+The HTML file has been uploaded to github and we will be retrieving the information and loading them into R dataframes. We will be using the package RCurl which allows us to obtain a text version of a html website. Then using the XML package function readHTMLTable which retrieves all the tables in the website. This is the reason why we need to specify which table which we want even though we only have one table in the HTML file
+
+```{R}
+library(RCurl)
+library(XML)
+
+html = getURLContent('https://raw.githubusercontent.com/xvicxpx/Data607/main/Homework%207/authors.html')
+html = readHTMLTable(html)
+html = html[[1]]
+html
+```
+
+
+# Importing XML File
+
+To import the XML file it will be much the same as importing the HTML file. The only difference is that we will be converting the XML file into a dataframe this time. One issue that I ran into was the & symbol. Even though i fixed it with an escape character in the XML it still was having an error so i needed to also use the gsub function to find all the & symbol and fix it before passing it into the function
+
+```{r}
+xml = getURLContent("https://raw.githubusercontent.com/xvicxpx/Data607/main/Homework%207/authors.xml")
+xml = gsub("&", "&amp;", xml)
+
+xml = xmlParse(xml)
+xml = xmlToDataFrame(xml)
+xml
+```
+
+# Importing Json File
+
+Like the process above importing a Json file will be similar. A json file is more similar to a XML file compared to the HTML file but is still very different. JSON is mostly used when programming in Javascript
+
+```{r}
+library(jsonlite)
+
+json = getURLContent("https://raw.githubusercontent.com/xvicxpx/Data607/main/Homework%207/authors.json")
+
+json = fromJSON(json)
+json = as.data.frame(json)
+
+json
+```
+
+# Conclusion
+
+In conclusion each data structures has its own strengths and weakness, but are valid ways of storing data. I prefer to use JSON as it has great packages in many different programming languages, but is it more difficult to create and read compared to html which is just a simple table. 
