@@ -1,17 +1,25 @@
 ---
 title: "CUNY SPS Data 607 Project 2"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 references:
-- id: StatCan
-  title: Labour force characteristics, monthly, seasonally adjusted and trend-cycle, last 5 months
-  URL: 'https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1410028701'
+- id: StatCan2021
+  title: Labour force characteristics, monthly, seasonally adjusted and trend-cycle,
+    last 5 months
+  URL: https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1410028701
   DOI: https://doi.org/10.25318/1410028701-eng
   publisher: Statistics Canada
   type: website
-- id: Covid
+- id: Covid2021
   title: UNCOVER COVID 19 Challenge
-  URL: 'https://www.kaggle.com/roche-data-science-coalition/uncover'
+  URL: https://www.kaggle.com/roche-data-science-coalition/uncover
   publisher: Kaggle
+  type: website
+- id: WorldBank2021
+  title: GDP growth (annual %)
+  URL: https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?end=2019&start=1961&view=chart
+  publisher: The World Bank
   type: website
 ---
 
@@ -26,7 +34,7 @@ The goal of Project 2 is to choose 3 wide datasets and transform the datasets
 
 # Dataset 1 : Canada Unemployment Rate
 
-The dataset that is from Stat Canada which is a government organization which compiles data for the public. The dataset that we will be looking at is the Canada unemployment data [@StatCan]. We can see that this is a wide dataset with all of the months being in the columns. The CSV file also includes a lot of unnecessary information that needs to be cleaned before any analysis can be done on the dataset. 
+The dataset that is from Stat Canada which is a government organization which compiles data for the public. The dataset that we will be looking at is the Canada unemployment data [@StatCan2021]. We can see that this is a wide dataset with all of the months being in the columns. The CSV file also includes a lot of unnecessary information that needs to be cleaned before any analysis can be done on the dataset. 
 
 ## Importing CSV File and Cleaning Data
 
@@ -97,6 +105,8 @@ We can see that there is a huge spike in unemployment rates and that is due to C
 
 # Dataset 2 : COVID
 
+The dataset is from a Kaggle competition by the Roche Data Science Coalition [@Covid2021]. The dataset is a curation of publicly available COVID datasets from different sources. 
+
 ## Loading CSV and Cleaning Data
 
 As what we did with the last dataset we will load the dataset and see if there needs to be any cleaning involved
@@ -135,6 +145,39 @@ covid %>%
 ```
 We can see that there isnt that much correlations in this dataset there is a correlation between cases and deaths. This makes sense as with more cases there is also going to be more covid deaths. One interesting thing to look at is certain countries like China which does not openly provide data. It would have been interesting to see if they made a mistake in their data and showed more deaths than cases which shows that they are underreporting the covid cases.
 
-# Dataset 3 : 
+# Dataset 3 : World Bank GDP
+
+This dataset is from the World Bank [@WorldBank2021] and shows annual GDP growth percentage for each country every year
+
+## Loading and Cleaning Data
+
+We can see that this is a very wide dataset that needs to be cleaned. We are going to be needing to unpivot the data and fix the years. This is a sparse dataset as there are some countries that do not have a lot of GDP information. We can also see that there is still no data in 2020 so that will also be removed. 
+
+```{r}
+gdp = read.csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Project%202/World%20Bank%20Annual%20GDP%20Growth.csv', skip = 4)
+
+gdp = gdp[-c(3, 4, 65, 66)]
+```
+
+```{r unpivoting of data}
+gdp = gdp %>%
+  pivot_longer(cols = c(3:62), names_to = 'Year', values_to = 'GDP_Growth_Percent')
+```
+
+```{r fixing of the years}
+gdp = gdp %>%
+  mutate(Year = parse_date_time(gsub("X", "", Year), orders = "Y"))
+```
+
+# Analysis
+
+With the clean dataset now we can easily plot any countries GDP on a time series scale. To improve this dataset there should be a way to group the countries into regions, zones, or categories as currently one would need to manually select which country they would like to see.
+
+```{r}
+gdp %>%
+  filter(Country.Code == 'USA' | Country.Code == 'CAN' | Country.Code == 'MEX') %>%
+  ggplot(aes(x=Year, y=GDP_Growth_Percent)) + geom_line(aes(color=Country.Name))
+```
+We can see that Mexico, Canada, and the United States have very similar GDP which is due to them being neighbors and its largest trading partners in North America. But we can see that there is a slightly downward trend which shows that the countries economies are no longer growing as fast as it use to be.
 
 # References
