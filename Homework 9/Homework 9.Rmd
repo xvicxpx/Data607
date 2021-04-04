@@ -1,0 +1,43 @@
+---
+title: "Homework 9"
+output: html_notebook
+---
+
+
+# Introduction
+This assignment we will be using restful api in order to retrieve information from New York Times. In this assignment I will be using the movie review api. I will be storing the API key in a dot env file as I do not want the API key to be published into git hub.
+
+# Using RESTFUL API And Storing Information In DataFrame
+
+Using the httr package allows us to use http request for information. We are able to add more parameters by adding more information into the query argument, but for this assignment we will just be getting all the movies. Once we get the response we will be getting the content of the request and putting it into a json format. From there the json format is then cenverted into a dataframe.
+
+```{r}
+library(httr)
+library(dotenv)
+library(jsonlite)
+
+api = Sys.getenv('API_KEY')
+base = 'https://api.nytimes.com'
+
+response = GET(base, path='/svc/movies/v2/reviews/picks.json', query = list('api-key' = api))
+
+response_text = content(response, 'text')
+
+json_file = fromJSON(response_text)
+
+df = json_file$results
+
+head(df)
+```
+
+
+
+# Conclusion
+
+With the creation of the RESTFUL API retrieving information has never been easier. We are now able to retrieve information in a uniform manor with any websites with a RESTFUL API. Most websites now are using RESTFUL API for all their information needs which makes learning this skill valuable.
+
+
+
+
+
+
