@@ -1,0 +1,95 @@
+---
+title: "Data 607 Homework 10"
+output: html_notebook
+references:
+- id: tidytextmining
+  title: Sentiment analysis with tidy data
+  author: Julia Silge and David Robinson
+  url: https://www.tidytextmining.com/sentiment.html#sentiment
+  publisher: github
+  type: website
+- id: textdata
+  title: textdata
+  author: EmilHvitfeldt
+  url: https://github.com/EmilHvitfeldt/textdata
+  publisher: github
+  type: website
+---
+
+# Introduction
+
+In this assignment we will be looking at different books and using sentiment lexicons to analyze the writing in the book. The lexicon sentiments have different ways of ranking words which is why each lexicon is different from each other. We will be using the example from Text Mining with R [@tidytextmining] and will be expanding on the example with different books and sentiment lexicons
+
+```{r textbook example}
+library(janeaustenr)
+library(dplyr)
+library(stringr)
+library(tidytext)
+
+tidy_books <- austen_books() %>%
+  group_by(book) %>%
+  mutate(
+    linenumber = row_number(),
+    chapter = cumsum(str_detect(text, 
+                                regex("^chapter [\\divxlc]", 
+                                      ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  unnest_tokens(word, text)
+
+nrc_joy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_joy) %>%
+  count(word, sort = TRUE)
+```
+
+# Using our own book and sentiment lexicon
+
+In our odn example we will be using a sentiment lexicon called Loughran-McDonald [@textdata]. This setiment Loughran-McDonald is used for financial documents and has the 6 sentiments: negative, positive, ligigious, uncertainty, constraining, or superfluous. I will be using this sentiment lexicon on different financial pages from the New York Times using the RESTFUL api.
+
+```{r getting the financial artical from new york times.}
+library(httr)
+library(dotenv)
+library(jsonlite)
+
+api = Sys.getenv('API_KEY')
+base = 'https://api.nytimes.com'
+
+response = GET(base, path='/svc/search/v2/articlesearch.json', query = list('api-key' = api, 'fq' = 'news_desk(\"Financial\")', 'type_of_material' = 'Article', 'section_name' = 'Business'))
+
+response_text = content(response, 'text')
+
+json_file = fromJSON(response_text)
+
+df = json_file$response$docs$lead_paragraph
+
+head(df)
+```
+
+```{r}
+library(textdata)
+
+sentiment = lexicon_loughran()
+
+hold = data.frame()
+
+for (x in df)
+{
+  text = strsplit(x, "(\\s+)|(?!')(?=[[:punct:]])", perl = TRUE)
+  hold2 = data.frame(c(word = text))
+  hold = rbind(hold, hold2)
+}
+```
+
+
+```{r}
+hold %>%
+  inner_join(sentiment) %>%
+  count(word, sentiment, sort = TRUE)
+```
+
+# Conclusion
+
+Using sentiments is a very helpful tool to help for understanding the information in a document for computers. The issue with sentiments is that it requires a lot of man power as it needs each word to have a label to associate with the word. The more words that the sentiment has better results one will get. This is why i would recommend the use of the NRC sentiments ash it has 13,901 words in the list. 
