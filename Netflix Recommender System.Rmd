@@ -1,0 +1,24 @@
+---
+title: "Netflix Recommender System"
+output: html_notebook
+---
+
+# Introduction
+
+When people think of Netflix they believe that it is only a company who provides digital content to its consumer, but in fact their whole service is based around their recommender system. Netflix whole goal is to keep its user on its own platform by recommending more content that the user will like. We will be applying Scenario Design to answer who are Netflix target users, What is their key goal, and how to accomplish their goals. 
+
+# Scenario Design
+
+Netflix target users is anyone who consumes digital content which can be male or female, young or old. Netflix has as huge target audiance which makes it a very competitive industry. Its key goal is to keep users from switching to their competitiors services. This means that they need to keep creating more original content and recommend more content in order to keep customers engaged with the service. To accomplish this goal they are going to need to a more accurate recommender system without using a lot of resources in order to keep its customers staying on their platform.
+
+# Netflix Algorthm
+
+Most recommender systems are highly confidental as they are the companies bread and butter therefore this may not be exactly what netflix is using but we are able to take educated guesses based on is history. Netflix created a competition to see who is able create the best recommender system with a $1 million dollar prize pool. The winner of the competition used a [linear combination of matrim factorisation (a.k.a SVD) and Restricted Boltzmann Machines(RBM)] (https://towardsdatascience.com/deep-dive-into-netflixs-recommender-system-341806ae3b48). Even though the winner was able to create this new algorithm it was never implemented as is required a lot of resources for marginal gains. This is the reason why sometimes the best models are simple linear regressions as it is easy and not resource intensive. 
+
+# Recommendation 
+
+I would recommend that the service keeps engaging with the customer to strengthen its recommender model. I would like to see the company send out surveys about different movies and TV shows in order to get more information besides a the simple thumbs up and down. More information that the company can gather will be very benefital and will give thems a heads up against the competition.
+
+# Citation
+
+"Deep Dive into Netflix Recommender System" (https://towardsdatascience.com/deep-dive-into-netflixs-recommender-system-341806ae3b48)
