@@ -18,7 +18,7 @@ movie_list = c('Bad Boys', 'The Rock', 'Armageddon', 'Pearl Harbor', 'Bad Boys I
 
 # OMDB API
 
-IMDB, Rotten Tomato, and Metacritics currently does not have a open source RESTFUL API for the public to gather data. Luckly there is a open source project called [OMDb]('http://www.omdbapi.com/') which provides an open source API to gather all details for a movie and also the ratings from the different sites. We will also need to implement checks to make sure that we are getting the right movie with the API by checking to make sure that the directors of all the movies is Micheal Bay.
+IMDB, Rotten Tomato, and Metacritics currently does not have a open source RESTFUL API for the public to gather data. Luckily there is a open source project called [OMDb]('http://www.omdbapi.com/') which provides an open source API to gather all details for a movie and also the ratings from the different sites. We will also need to implement checks to make sure that we are getting the right movie with the API by checking to make sure that the directors of all the movies is Micheal Bay.
 
 ```{r}
 library(dotenv)
@@ -73,10 +73,10 @@ We are now able to get all the ratings using OMDB API from the biggest rating si
 
 # Roger Ebert Reviews
 
-I am also going to be getting the ratings from (RogerEbret.com)[https://www.rogerebert.com/cast-and-crew/michael-bay] which has a specific section showings the ratings for all Michael Bay movies. This website does not have a API so I will be putting all the movies into a excel spreadsheet and exporting them into a csv. Then I will be loading the csv file and combining the data that I got with the Restful API.
+I am also going to be getting the ratings from [RogerEbret.com](https://www.rogerebert.com/cast-and-crew/michael-bay) which has a specific section showings the ratings for all Michael Bay movies. This website does not have a API so I will be putting all the movies into a excel spreadsheet and exporting them into a csv. Then I will be loading the csv file and combining the data that I got with the Restful API.
 
 ```{r}
-file = read_csv('Roger Ebert Michael Bay.csv', col_names=c('Movie', 'Value'))
+file = read_csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Final%20Project/Roger%20Ebert%20Michael%20Bay.csv', col_names=c('Movie', 'Value'))
 
 file = file %>%
   mutate(Source = 'Robertebert.com')
@@ -121,7 +121,7 @@ rating = rating %>%
   mutate(normal_value = ((fix_value-Min)/(Max - Min)))
 ```
 
-Now that we have normalized all the ratings lets see which are the highest rated movies, but it is still difficult to see which one is truly the highest rated movie. I am going to now take all the normalized ratings and aggregate them into one final rating to see which one is truly the highest rated Michael Bay Movie.
+Now that we have normalized all the ratings lets see which are the highest rated movies. It is still difficult to see which one is truly the highest rated movie since there is so many different ratings for each movie. Some sources may rate a movie high while others may rate it low. I am going to now take all the normalized ratings and aggregate them into one final rating to see which one is truly the highest rated Michael Bay Movie.
 
 ```{r}
 rating %>%
@@ -162,5 +162,5 @@ rating %>%
 
 
 # Conclusion
-We can see that the highest rated movie is The Rock and we can confirm that by looking at the individual ratings from the different sources. While there are multiple methods of normalizing scores, the Min-Max Feature Scaling was the easiest to implement especially since I did not know the population mean, standard deviation, and if the scores were normal. The downside of the Min-Max Feature Scaling is that depending on the scaling of the rating system. For example Robertebert.com which only rates out of 4 which means when the score is normalized there will also be only 4 different scores. 
+We can see that the highest rated movie is The Rock and we can confirm that by looking at the individual ratings from the different sources. While there are multiple methods of normalizing scores, the Min-Max Feature Scaling was the easiest to implement especially since I did not know the population mean, standard deviation, and if the scores were normal. The downside of the Min-Max Feature Scaling is that depending on the scaling of the rating system. For example Robertebert.com which only rates out of 4 which means when the score is normalized there will also be only 4 different scores. Something new that I tried was creating my presentation using R Markdown instead of powerpoint. While it is a lot easier not needing to go back and forth between different programs, it requires learning of specific commands in order to create the presentation.
 
