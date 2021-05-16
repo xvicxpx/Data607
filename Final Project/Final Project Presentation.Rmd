@@ -1,0 +1,131 @@
+---
+title: "Final Project Presentation"
+output: ioslides_presentation
+author: "Vic Chan"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+## Introduction
+
+- For my final project I created extended Week 2 Assignment with the knowledge that we have gain throughout the semester.
+- I will be showing the ratings of all the movies Michael Bay has directed and their ratings from multiple sources and normalizing the ratings to create one final rating for the end user.
+
+## OMDB API
+
+- Open Source API - Just need to sign up and get a limited amount of calls to the API a day
+- Provides a lot of information on the movie including the scores from IMDB, Rotten Tomato, and Metacritics
+- Example of a API Call
+
+```{r, echo=FALSE}
+library(dotenv)
+library(httr)
+library(jsonlite)
+library(kableExtra)
+```
+
+```{r, echo=FALSE}
+base = 'http://www.omdbapi.com'
+api = Sys.getenv('API_KEY')
+
+response = GET(base, query = list('apikey' = api, 'type' = 'movie', 't' = 'Bad Boys'))
+response_text = content(response, 'text')
+
+json_file = fromJSON(response_text)
+summary(json_file)
+```
+
+## RobertEbert.com
+
+- Another rating website without a RESTFUL API
+- Had a rated list of movies that Michael Bay directed
+- The Rating system rated movies out of 4
+- Manually entered the information into a Excel Spreadsheet and imported it into the data set
+
+```{r rfig.width=1, echo=FALSE}
+library(png)
+library(grid)
+img = readPNG('Robert Ebert Screenshot.png')
+grid.raster(img)
+```
+
+
+## Ratings
+
+- The ratings are from 3 different sources
+- Each of the source has a different rating system 
+- Need to somehow normalize all the different rates
+
+```{r}
+json_file$Ratings
+```
+
+## Min Max Normalization
+
+- Simple to implement compared to using Z Score
+- Do not have the population mean and standard deviation to use the Z Score
+- Allows for bounded range
+- Returns a value from 0 to 1
+
+$$
+X' = \frac{(X - X_{min})}{X_{max} - X_{min}}
+$$
+
+## Results
+Here is the original ratings before the ratings were normalized
+
+```{r, echo=FALSE}
+rating = read.csv('results.csv')
+
+rating %>%
+  select(Movie, Source, Value) %>%
+  pivot_wider(names_from=Source, values_from=Value) %>%
+  head() %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Results
+We can see that IMDB(Internet Database) scores relatively higher on all Michael Bay movies compared to the other rating sources. This should not be an issue as long as IMDB consistently rates the movies. 
+```{r}
+rating %>%
+  ggplot(aes(x=Movie, y=normal_value, fill=Source)) + geom_bar(stat='identity', position=position_dodge()) + coord_flip()
+```
+
+## Results
+Here is the ratings with the normalized rates
+
+```{r, echo=FALSE}
+rating = read.csv('results.csv')
+
+rating %>%
+  select(Movie, Source, normal_value) %>%
+  pivot_wider(names_from=Source, values_from=normal_value) %>%
+  head() %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Results
+
+With all the rates normalized and averaged we can now see a simple graph which shows which are the best Michael Bay movie based on the different sources. We can see that The Rock is the most popular Micheal Bay movie
+```{r}
+rating %>%
+  filter(!is.na(normal_value)) %>%
+  group_by(Movie) %>%
+  summarize(avg_norm_value = mean(normal_value)) %>%
+  ggplot(aes(x = reorder(Movie, avg_norm_value), y = avg_norm_value)) + geom_bar(stat='identity') + coord_flip()
+```
+## Challenges
+
+- Looking for a solution to normalize the scores into one score.
+- Was trying very hard to use the Z Score method and see if i can get the popluation mean and standard deviation
+- Shows that sometimes the easiest solutions are the better solution
+- Using R Presentation instead of Powerpoint
+
+## Conclusion
+
+So in conclusion we can 

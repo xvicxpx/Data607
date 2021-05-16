@@ -1,0 +1,166 @@
+---
+title: "Data 607 Final Project"
+output: html_notebook
+---
+
+# Introduction
+
+For my final project I will be gathering movie ratings from different sources and normalizing the different ratings. I will be gathering the information from different movie rating sites like IMDB, Rotten Tomato, and Metacritics. Each of these sites have different rating systems and different rating scales, which will be normalized in this project in order to create one single rating. I will also be gathering information by scrapping websites that do not have a open source RESTFUL API to use. For this project I will be creating a normalized list of ratings for all Micheal Bay Movies.
+
+
+# Prerequisite Before Gathering Data
+
+We will be needing to create a list of all Micheal Bay movies in which he directed. This list will be used to pass through to the RESTFUL API in order to get the ratings of these movies.
+```{r}
+movie_list = c('Bad Boys', 'The Rock', 'Armageddon', 'Pearl Harbor', 'Bad Boys II', 'The Island', 'Transformers', 'Transformers: Revenge of the Fallen', 'Transformers: Dark of the Moon', 'Pain & Gain', 'Transformers: Age of Extinction', 'Transformers: The Last Knight')
+```
+
+
+# OMDB API
+
+IMDB, Rotten Tomato, and Metacritics currently does not have a open source RESTFUL API for the public to gather data. Luckly there is a open source project called [OMDb]('http://www.omdbapi.com/') which provides an open source API to gather all details for a movie and also the ratings from the different sites. We will also need to implement checks to make sure that we are getting the right movie with the API by checking to make sure that the directors of all the movies is Micheal Bay.
+
+```{r}
+library(dotenv)
+library(httr)
+library(jsonlite)
+library(tidyverse)
+```
+
+```{r Testing of the API}
+base = 'http://www.omdbapi.com'
+api = Sys.getenv('API_KEY')
+
+response = GET(base, query = list('apikey' = api, 'type' = 'movie', 't' = 'bad boy'))
+response_text = content(response, 'text')
+
+json_file = fromJSON(response_text)
+```
+
+```{r function to get the ratings movie}
+
+get_movie_info = function(movie_title)
+{
+  base = 'http://www.omdbapi.com'
+  api = Sys.getenv('API_KEY')
+  
+  response = GET(base, query = list('apikey' = api, 'type' = 'movie', 't' = movie_title))
+  response_text = content(response, 'text')
+  
+  json_file = fromJSON(response_text)
+  
+  json_file = json_file$Ratings
+  
+  json_file = json_file %>%
+    mutate(Movie = movie_title)
+  
+  return(json_file)
+}
+```
+
+```{r looping through the movies and getting all the ratings}
+columns = c('Source', 'Value', 'Movie')
+rating = data.frame(matrix(nrow = 0, ncol = length(columns)))
+colnames(rating) = columns
+
+for (movie in movie_list)
+{
+  rating = rbind(rating, get_movie_info(movie))
+}
+```
+
+We are now able to get all the ratings using OMDB API from the biggest rating sites IMDB, Rotten Tomato, and Metacritics. 
+
+# Roger Ebert Reviews
+
+I am also going to be getting the ratings from (RogerEbret.com)[https://www.rogerebert.com/cast-and-crew/michael-bay] which has a specific section showings the ratings for all Michael Bay movies. This website does not have a API so I will be putting all the movies into a excel spreadsheet and exporting them into a csv. Then I will be loading the csv file and combining the data that I got with the Restful API.
+
+```{r}
+file = read_csv('Roger Ebert Michael Bay.csv', col_names=c('Movie', 'Value'))
+
+file = file %>%
+  mutate(Source = 'Robertebert.com')
+
+rating = rbind(rating, file)
+```
+
+# Unpivoting the Data and Normalizing the Data
+
+I am going to unpiviot the data so that it will be easier to compare the rating of each of the movies
+```{r}
+rating %>%
+  pivot_wider(names_from=Source, values_from=Value)
+```
+
+From a quick look it is difficult to see which movie is highly rating as each rating website has their own rating systems and and weights. I am going normalize all of the different rates by using the the Min-Max Feature Scaling $(X - X_{min})/(X_{max} - X_{min})$. This will normalize all the scores from the different from the different sources. Also we will not be using the Z score method of standardizing the scores as we do not know if the data follows a normal distribution, and using the Z score method there is no bounds to the range. 
+
+
+```{r}
+source_rating = data.frame('Source' = c('Internet Movie Database', 'Rotten Tomatoes', 'Metacritic', 'Robertebert.com'),
+                           'Min' = c(1, 1, 1, 1),
+                           'Max' = c(10, 100, 100, 4)
+                           )
+```
+
+```{r Fixing Rates}
+pattern = '^\\D*(\\d+(?:\\.\\d+)?)'
+
+rating = rating %>%
+  mutate(fix_value = str_extract(Value, pattern))
+
+rating$fix_value = as.numeric(rating$fix_value)
+```
+
+```{r joinning of the min and max rating}
+rating = rating %>%
+  left_join(source_rating, by='Source')
+```
+
+```{r formula to normalize the ratings}
+rating = rating %>%
+  mutate(normal_value = ((fix_value-Min)/(Max - Min)))
+```
+
+Now that we have normalized all the ratings lets see which are the highest rated movies, but it is still difficult to see which one is truly the highest rated movie. I am going to now take all the normalized ratings and aggregate them into one final rating to see which one is truly the highest rated Michael Bay Movie.
+
+```{r}
+rating %>%
+  select(Source, Movie, normal_value) %>%
+  pivot_wider(names_from=Source, values_from=normal_value)
+```
+# Graphics and Statistical Analysis
+
+Now that we have normalized all the different rates from the different sources we can take the average of all the scores in order to get one final score. This will allow users to easily determine which movie is the best without needing to look at all the data.
+
+```{r}
+rating %>%
+  filter(!is.na(normal_value)) %>%
+  group_by(Movie) %>%
+  summarize(avg_norm_value = mean(normal_value)) %>%
+  arrange(desc(avg_norm_value))
+```
+As we can see The Rock is the highest rated Michael Bay movie with Transformers coming at a close second. 
+
+## Graphics
+
+Plotting out all the movies and comparing how each source rates the movie in order to see if a certain source has bias against Micheal Bay movies
+
+```{r}
+rating %>%
+  ggplot(aes(x=Movie, y=normal_value, fill=Source)) + geom_bar(stat='identity', position=position_dodge()) + coord_flip()
+```
+
+We can see that IMDB (Internet Movie Database) rates movies a lot higher compared to the other sources. When the other sources rate a Micheal Bay movie very low IMDB usually rates it really high. If we look at the raw data we can easily see this with many movies where Rotten Tomato rates a movie 20/100 but IMDB would rate the movie 6/10. But as long as IMDB rates is rating the movies consistently without any bias, then it should not have an effect on the normalization of the rating. 
+
+```{r}
+rating %>%
+  filter(!is.na(normal_value)) %>%
+  group_by(Movie) %>%
+  summarize(avg_norm_value = mean(normal_value)) %>%
+  ggplot(aes(x = reorder(Movie, avg_norm_value), y = avg_norm_value)) + geom_bar(stat='identity') + coord_flip()
+```
+
+
+# Conclusion
+We can see that the highest rated movie is The Rock and we can confirm that by looking at the individual ratings from the different sources. While there are multiple methods of normalizing scores, the Min-Max Feature Scaling was the easiest to implement especially since I did not know the population mean, standard deviation, and if the scores were normal. The downside of the Min-Max Feature Scaling is that depending on the scaling of the rating system. For example Robertebert.com which only rates out of 4 which means when the score is normalized there will also be only 4 different scores. 
+

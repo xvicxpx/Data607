@@ -1,0 +1,49 @@
+"","Source","Value","Movie","fix_value","Min","Max","normal_value"
+"1","Internet Movie Database","6.9/10","Bad Boys",6.9,1,10,0.655555555555556
+"2","Rotten Tomatoes","42%","Bad Boys",42,1,100,0.414141414141414
+"3","Metacritic","41/100","Bad Boys",41,1,100,0.404040404040404
+"4","Internet Movie Database","7.4/10","The Rock",7.4,1,10,0.711111111111111
+"5","Rotten Tomatoes","66%","The Rock",66,1,100,0.656565656565657
+"6","Metacritic","58/100","The Rock",58,1,100,0.575757575757576
+"7","Internet Movie Database","6.7/10","Armageddon",6.7,1,10,0.633333333333333
+"8","Rotten Tomatoes","38%","Armageddon",38,1,100,0.373737373737374
+"9","Metacritic","42/100","Armageddon",42,1,100,0.414141414141414
+"10","Internet Movie Database","6.2/10","Pearl Harbor",6.2,1,10,0.577777777777778
+"11","Rotten Tomatoes","24%","Pearl Harbor",24,1,100,0.232323232323232
+"12","Metacritic","44/100","Pearl Harbor",44,1,100,0.434343434343434
+"13","Internet Movie Database","6.6/10","Bad Boys II",6.6,1,10,0.622222222222222
+"14","Rotten Tomatoes","23%","Bad Boys II",23,1,100,0.222222222222222
+"15","Metacritic","38/100","Bad Boys II",38,1,100,0.373737373737374
+"16","Internet Movie Database","6.8/10","The Island",6.8,1,10,0.644444444444444
+"17","Rotten Tomatoes","40%","The Island",40,1,100,0.393939393939394
+"18","Metacritic","50/100","The Island",50,1,100,0.494949494949495
+"19","Internet Movie Database","7.0/10","Transformers",7,1,10,0.666666666666667
+"20","Rotten Tomatoes","58%","Transformers",58,1,100,0.575757575757576
+"21","Metacritic","61/100","Transformers",61,1,100,0.606060606060606
+"22","Internet Movie Database","6.0/10","Transformers: Revenge of the Fallen",6,1,10,0.555555555555556
+"23","Rotten Tomatoes","20%","Transformers: Revenge of the Fallen",20,1,100,0.191919191919192
+"24","Metacritic","35/100","Transformers: Revenge of the Fallen",35,1,100,0.343434343434343
+"25","Internet Movie Database","6.2/10","Transformers: Dark of the Moon",6.2,1,10,0.577777777777778
+"26","Rotten Tomatoes","35%","Transformers: Dark of the Moon",35,1,100,0.343434343434343
+"27","Metacritic","42/100","Transformers: Dark of the Moon",42,1,100,0.414141414141414
+"28","Internet Movie Database","6.4/10","Pain & Gain",6.4,1,10,0.6
+"29","Rotten Tomatoes","50%","Pain & Gain",50,1,100,0.494949494949495
+"30","Metacritic","45/100","Pain & Gain",45,1,100,0.444444444444444
+"31","Internet Movie Database","5.6/10","Transformers: Age of Extinction",5.6,1,10,0.511111111111111
+"32","Rotten Tomatoes","17%","Transformers: Age of Extinction",17,1,100,0.161616161616162
+"33","Metacritic","32/100","Transformers: Age of Extinction",32,1,100,0.313131313131313
+"34","Internet Movie Database","5.2/10","Transformers: The Last Knight",5.2,1,10,0.466666666666667
+"35","Rotten Tomatoes","15%","Transformers: The Last Knight",15,1,100,0.141414141414141
+"36","Metacritic","27/100","Transformers: The Last Knight",27,1,100,0.262626262626263
+"37","Robertebert.com",NA,"Bad Boys",NA,1,4,NA
+"38","Robertebert.com","3.5/4.0","The Rock",3.5,1,4,0.833333333333333
+"39","Robertebert.com","1.0/4.0","Armageddon",1,1,4,0
+"40","Robertebert.com","1.5/4.0","Pearl Harbor",1.5,1,4,0.166666666666667
+"41","Robertebert.com","1.0/4.0","Bad Boys II",1,1,4,0
+"42","Robertebert.com","3.0/4.0","The Island",3,1,4,0.666666666666667
+"43","Robertebert.com","3.0/4.0","Transformers",3,1,4,0.666666666666667
+"44","Robertebert.com","1.0/4.0","Transformers: Revenge of the Fallen",1,1,4,0
+"45","Robertebert.com","1.0/4.0","Transformers: Dark of the Moon",1,1,4,0
+"46","Robertebert.com","2.5/4.0","Pain & Gain",2.5,1,4,0.5
+"47","Robertebert.com","2.5/4.0","Transformers: Age of Extinction",2.5,1,4,0.5
+"48","Robertebert.com","1.0/4.0","Transformers: The Last Knight",1,1,4,0
