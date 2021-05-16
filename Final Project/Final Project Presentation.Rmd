@@ -78,7 +78,7 @@ $$
 Here is the original ratings before the ratings were normalized
 
 ```{r, echo=FALSE}
-rating = read.csv('results.csv')
+rating = read.csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Final%20Project/results.csv')
 
 rating %>%
   select(Movie, Source, Value) %>%
@@ -99,7 +99,7 @@ rating %>%
 Here is the ratings with the normalized rates
 
 ```{r, echo=FALSE}
-rating = read.csv('results.csv')
+rating = read.csv('https://raw.githubusercontent.com/xvicxpx/Data607/main/Final%20Project/results.csv')
 
 rating %>%
   select(Movie, Source, normal_value) %>%
@@ -128,4 +128,6 @@ rating %>%
 
 ## Conclusion
 
-So in conclusion we can 
+- The Rock is the most popular Micheal Bay movie followed by Transformers and The Island.
+- There are many different ways to normalize scores
+- IMDB scores are a lot higher compared to other sources
